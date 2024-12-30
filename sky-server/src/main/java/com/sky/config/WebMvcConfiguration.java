@@ -37,31 +37,37 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .excludePathPatterns("/admin/employee/login");
     }
 
+
     /**
-     * 通过knife4j生成接口文档
-     * @return
+     * 创建并配置Swagger2的Docket对象
+     * Docket对象是Swagger生成接口文档的核心配置对象
+     * 通过此方法的配置，可以定义哪些接口将被包含在生成的文档中
+     *
+     * @return Docket 配置好的Docket对象实例
      */
     @Bean
     public Docket docket() {
+        // 构建API信息，包括标题、版本和描述，用于在文档中展示
         ApiInfo apiInfo = new ApiInfoBuilder()
                 .title("苍穹外卖项目接口文档")
                 .version("2.0")
                 .description("苍穹外卖项目接口文档")
                 .build();
+
+        // 创建Docket对象，并进行配置
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo)
+                .apiInfo(apiInfo) // 设置API信息
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.sky.controller"))
-                .paths(PathSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.sky.controller")) // 指定要扫描的API接口的包
+                .paths(PathSelectors.any()) // 包含所有路径
                 .build();
+
         return docket;
     }
 
-    /**
-     * 设置静态资源映射
-     * @param registry
-     */
+
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+        log.info("开始进行静态资源映射...");
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
